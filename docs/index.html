@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mFG hirsutism cutoffs in South Asian populations: explorer</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --surface-2: #f3f2ef;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #74736d;
+    --grid: #e4e3de; --border: #d6d5cf;
+    --series-1: #2a78d6; --series-2: #eb6834; --neutral: #8a8982;
+    --band: rgba(42,120,214,.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --surface-2: #242423;
+      --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #9b9a92;
+      --grid: #343432; --border: #444441;
+      --series-1: #3987e5; --series-2: #d95926; --neutral: #8f8e86;
+      --band: rgba(57,135,229,.16);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-1); color: var(--text-primary);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 32px 0 4px; }
+  p.lede, p.note { color: var(--text-secondary); margin: 4px 0 12px; max-width: 70ch; }
+  p.note { font-size: 13px; color: var(--text-muted); }
+  .banner { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 10px 14px; font-size: 13px; color: var(--text-secondary); margin: 12px 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; margin: 16px 0 8px; }
+  .filters label { display: flex; flex-direction: column; font-size: 12px; color: var(--text-secondary); gap: 2px; }
+  .filters label.inline { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; }
+  select { font: inherit; padding: 4px 8px; background: var(--surface-1); color: var(--text-primary);
+           border: 1px solid var(--border); border-radius: 6px; }
+  fieldset { border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; margin: 0; }
+  fieldset legend { font-size: 12px; color: var(--text-secondary); padding: 0 4px; }
+  .filters fieldset label { flex-direction: row; display: inline-flex; gap: 4px; align-items: center; margin-right: 10px; font-size: 13px; color: var(--text-primary); }
+  svg { width: 100%; height: auto; display: block; overflow: visible; }
+  svg text { fill: var(--text-secondary); font: 12px system-ui, sans-serif; }
+  svg text.strong { fill: var(--text-primary); }
+  svg .grid { stroke: var(--grid); stroke-width: 1; }
+  svg .axis { stroke: var(--border); stroke-width: 1; }
+  svg .ref8 { stroke: var(--text-primary); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  svg .band { fill: var(--band); }
+  svg .mark { stroke: var(--surface-1); stroke-width: 2; }
+  svg .mark:hover, svg .mark:focus { stroke: var(--text-primary); outline: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--text-secondary); margin: 4px 0 8px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend svg { width: 14px; height: 14px; }
+  .legend svg * { fill: var(--text-secondary); stroke: none; }
+  .legend svg .ringlg { fill: none; stroke: var(--text-secondary); stroke-width: 2; }
+  #tip { position: fixed; pointer-events: none; z-index: 10; max-width: 320px; padding: 8px 10px;
+         background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+         border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.18); font-size: 12px; display: none; }
+  #tip b { display: block; margin-bottom: 2px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--text-secondary); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tag { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); white-space: nowrap; }
+  details summary { cursor: pointer; color: var(--text-secondary); }
+  .table-wrap { overflow-x: auto; }
+  .empty { color: var(--text-muted); padding: 24px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>mFG hirsutism cutoffs in South Asian populations</h1>
+  <p class="lede">What cutoffs and prevalence figures have been published for South Asian and diaspora women, how were they measured, and how do they sit against the conventional cutoff of 8 and the P-PUP ethnicity-specific cutoffs (none of which come from South Asia)?</p>
+  <div class="banner" id="banner">Early draft. A few studies extracted, none yet verified by a person against the paper. The systematic database search has not been run. This is a map of what exists, not a pooled estimate, and not clinical guidance.</div>
+
+  <div class="filters" role="group" aria-label="Filters">
+    <label>Setting <select id="f-setting"></select></label>
+    <label>Assessor <select id="f-assessor"></select></label>
+    <label>Country <select id="f-country"></select></label>
+    <label class="inline"><input type="checkbox" id="f-secondary" checked> Include leads (not yet read in the original)</label>
+    <label class="inline"><input type="checkbox" id="f-comp" checked> Show comparison cutoffs</label>
+  </div>
+
+  <h2>Cutoffs by study</h2>
+  <p class="note">Each row is one cutoff on the mFG scale (0 to 36). The dashed line is the conventional cutoff of 8. The shaded band is the 2023 guideline range, taken from project notes and not yet verified. Hover or focus a mark for details.</p>
+  <div class="legend" id="legend-a"></div>
+  <div id="chart-a"></div>
+
+  <h2>Prevalence of hirsutism</h2>
+  <div class="filters">
+    <fieldset>
+      <legend>Prevalence measured at</legend>
+      <label><input type="radio" name="prev" value="both" checked> Both</label>
+      <label><input type="radio" name="prev" value="8"> mFG &ge; 8</label>
+      <label><input type="radio" name="prev" value="own"> Study's own cutoff</label>
+    </fieldset>
+  </div>
+  <p class="note">Same study, different threshold: the gap between the two points is the effect of the cutoff alone. The grey diamond is a headline prevalence whose threshold the paper's abstract does not state.</p>
+  <div class="legend" id="legend-b"></div>
+  <div id="chart-b"></div>
+
+  <h2>Studies and leads</h2>
+  <div class="table-wrap" id="table"></div>
+
+  <h2>Contested claims</h2>
+  <p class="note">Recorded with what each source cites. Not resolved here.</p>
+  <div class="table-wrap" id="claims"></div>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script>
+"use strict";
+const SVGNS = "http://www.w3.org/2000/svg";
+const SHAPES = { community: "circle", school: "triangle", university_students: "square",
+                 hospital_opd: "diamond", clinic_patients: "cross", unclear: "ring" };
+const LABELS = { community: "Community", school: "School", university_students: "University students",
+                 hospital_opd: "Hospital outpatients", clinic_patients: "Clinic patients", unclear: "Setting unclear" };
+const ASSESSORS = { trained_examiner: "Trained examiner", clinician: "Clinician", self_assessed: "Self-assessed",
+                    unclear: "Unclear", not_reported: "Not reported" };
+
+/* ---------- CSV ---------- */
+function parseCSV(text) {
+  const rows = []; let row = [], field = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; }
+      else field += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field); field = ""; if (row.length > 1 || row[0] !== "") rows.push(row); row = [];
+    } else field += c;
+  }
+  if (field !== "" || row.length) { row.push(field); rows.push(row); }
+  const head = rows.shift();
+  return rows.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] === undefined ? "" : r[i]])));
+}
+const num = v => (v === "" || v == null ? null : Number(v));
+const el = (name, attrs = {}, text) => {
+  const e = document.createElementNS(SVGNS, name);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text != null) e.textContent = text;
+  return e;
+};
+const h = (tag, attrs = {}, text) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text != null) e.textContent = text;
+  return e;
+};
+
+/* ---------- markers ---------- */
+function marker(shape, x, y, r, color, hollow) {
+  const fill = hollow ? "var(--surface-1)" : color;
+  const common = { class: "mark", style: `fill:${fill};stroke:${hollow ? color : "var(--surface-1)"};stroke-width:2` };
+  if (shape === "square") return el("rect", { ...common, x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: 2 });
+  if (shape === "triangle") return el("path", { ...common, d: `M${x},${y - r - 1} L${x + r + 1},${y + r} L${x - r - 1},${y + r} Z` });
+  if (shape === "diamond") return el("path", { ...common, d: `M${x},${y - r - 2} L${x + r + 2},${y} L${x},${y + r + 2} L${x - r - 2},${y} Z` });
+  if (shape === "cross") return el("path", { ...common, d: `M${x - 3},${y - r} h6 v${r - 3} h${r - 3} v6 h-${r - 3} v${r - 3} h-6 v-${r - 3} h-${r - 3} v-6 h${r - 3} Z` });
+  if (shape === "ring") return el("circle", { ...common, style: `fill:var(--surface-1);stroke:${color};stroke-width:2`, cx: x, cy: y, r });
+  return el("circle", { ...common, cx: x, cy: y, r });
+}
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function showTip(evt, node, lines) {
+  tip.replaceChildren();
+  const b = h("b", {}, lines[0]); tip.append(b);
+  lines.slice(1).forEach(l => tip.append(h("div", {}, l)));
+  tip.style.display = "block";
+  const r = (evt.target || node).getBoundingClientRect();
+  const x = evt.clientX || r.right, y = evt.clientY || r.top;
+  tip.style.left = Math.min(x + 14, window.innerWidth - tip.offsetWidth - 8) + "px";
+  tip.style.top = Math.min(y + 14, window.innerHeight - tip.offsetHeight - 8) + "px";
+}
+const hideTip = () => { tip.style.display = "none"; };
+function attachTip(node, lines) {
+  node.setAttribute("tabindex", "0");
+  node.setAttribute("role", "img");
+  node.setAttribute("aria-label", lines.join(". "));
+  node.addEventListener("mousemove", e => showTip(e, node, lines));
+  node.addEventListener("mouseleave", hideTip);
+  node.addEventListener("focus", e => showTip(e, node, lines));
+  node.addEventListener("blur", hideTip);
+}
+
+/* ---------- chart scaffolding ---------- */
+const W = 940, M = { l: 250, r: 24, t: 28, b: 36 }, ROW = 30;
+function frame(container, nRows, xMax, xLabel, ticks) {
+  const H = M.t + M.b + nRows * ROW;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "group" });
+  const x = v => M.l + (v / xMax) * (W - M.l - M.r);
+  ticks.forEach(t => {
+    svg.append(el("line", { class: "grid", x1: x(t), x2: x(t), y1: M.t - 6, y2: H - M.b }));
+    svg.append(el("text", { x: x(t), y: H - M.b + 16, "text-anchor": "middle" }, String(t)));
+  });
+  svg.append(el("line", { class: "axis", x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b }));
+  svg.append(el("text", { x: (M.l + W - M.r) / 2, y: H - 4, "text-anchor": "middle" }, xLabel));
+  container.replaceChildren(svg);
+  return { svg, x, y: i => M.t + i * ROW + ROW / 2, H };
+}
+function rowLabel(svg, y, main, sub, muted) {
+  const t = el("text", { x: M.l - 12, y: y - (sub ? 2 : -4), "text-anchor": "end", class: muted ? "" : "strong" }, main);
+  svg.append(t);
+  if (sub) svg.append(el("text", { x: M.l - 12, y: y + 11, "text-anchor": "end", style: "font-size:11px;fill:var(--text-muted)" }, sub));
+}
+const short = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
+
+/* ---------- state ---------- */
+let STUDIES = [], COMPS = [], CLAIMS = [];
+
+function filtered() {
+  const f = {
+    setting: document.getElementById("f-setting").value,
+    assessor: document.getElementById("f-assessor").value,
+    country: document.getElementById("f-country").value,
+    leads: document.getElementById("f-secondary").checked,
+  };
+  return STUDIES.filter(s =>
+    (s.inclusion_status === "included" || (f.leads && s.inclusion_status === "lead")) &&
+    (!f.setting || s.setting === f.setting) &&
+    (!f.assessor || s.assessor === f.assessor) &&
+    (!f.country || s.country === f.country));
+}
+const studyName = s => {
+  const who = s.first_author ? s.first_author + (s.year ? " " + s.year : "") : s.study_id.replace(/_unverified$/, "");
+  return who;
+};
+const studySub = s => [short(s.locale || s.country || "", 30), s.n_total ? "n=" + s.n_total : null].filter(Boolean).join(", ");
+const hollow = s => !(s.source_checked === "primary_full_text" || s.source_checked === "abstract_only");
+const studyLines = s => {
+  const L = [studyName(s) + (s.title ? ": " + short(s.title, 70) : "")];
+  L.push(`${LABELS[s.setting] || "Setting not given"}; assessor: ${ASSESSORS[s.assessor] || "not given"}`);
+  if (s.cutoff_used) L.push(`Cutoff ${s.cutoff_used} (${(s.cutoff_basis || "").replace(/_/g, " ")})`);
+  if (s.mean_mfg) L.push(`Mean mFG ${s.mean_mfg}${s.sd_mfg ? " ± " + s.sd_mfg : ""}`);
+  L.push(`Source: ${s.source_checked.replace(/_/g, " ")}${s.human_verified === "yes" ? ", human verified" : ", not yet human verified"}`);
+  return L;
+};
+
+/* ---------- Panel A: cutoffs ---------- */
+function drawCutoffs() {
+  const showComp = document.getElementById("f-comp").checked;
+  const studies = filtered().filter(s => s.cutoff_used).sort((a, b) => (a.year || 9999) - (b.year || 9999));
+  const comps = showComp ? COMPS.slice().sort((a, b) => b.cutoff_max - a.cutoff_max) : [];
+  const rows = [...studies.map(s => ({ kind: "study", s })), ...comps.map(c => ({ kind: "comp", c }))];
+  const box = document.getElementById("chart-a");
+  if (!rows.length) { box.replaceChildren(h("p", { class: "empty" }, "No studies with a stated cutoff match these filters.")); return; }
+  const f = frame(box, rows.length, 10, "mFG score cutoff", [0, 2, 4, 6, 8, 10]);
+  // guideline band (unverified) and conventional cutoff
+  const g = COMPS.find(c => c.comparator_id === "guideline_2023");
+  if (g && showComp) f.svg.insertBefore(el("rect", { class: "band", x: f.x(g.cutoff_min), width: f.x(g.cutoff_max) - f.x(g.cutoff_min), y: M.t - 6, height: f.H - M.b - M.t + 6 }), f.svg.firstChild);
+  f.svg.append(el("line", { class: "ref8", x1: f.x(8), x2: f.x(8), y1: M.t - 6, y2: f.H - M.b }));
+  f.svg.append(el("text", { x: f.x(8) + 4, y: M.t - 12 }, "conventional ≥ 8"));
+  let sepDone = false;
+  rows.forEach((r, i) => {
+    const y = f.y(i);
+    if (r.kind === "comp" && !sepDone && studies.length) {
+      sepDone = true;
+      f.svg.append(el("line", { class: "axis", x1: 8, x2: W - M.r, y1: y - ROW / 2, y2: y - ROW / 2 }));
+    }
+    if (r.kind === "study") {
+      const s = r.s;
+      rowLabel(f.svg, y, studyName(s), studySub(s), false);
+      const m = marker(SHAPES[s.setting] || "ring", f.x(+s.cutoff_used), y, 6, "var(--series-1)", hollow(s));
+      attachTip(m, studyLines(s));
+      f.svg.append(m);
+    } else {
+      const c = r.c;
+      rowLabel(f.svg, y, short(c.group, 38), null, true);
+      const lo = f.x(+c.cutoff_min), hi = f.x(+c.cutoff_max);
+      if (hi > lo) f.svg.append(el("line", { x1: lo, x2: hi, y1: y, y2: y, stroke: "var(--neutral)", "stroke-width": 3, "stroke-linecap": "round" }));
+      [lo, hi].filter((v, k, a) => a.indexOf(v) === k).forEach(px => {
+        const m = marker("circle", px, y, 5, "var(--neutral)", c.source_checked === "secondary" || c.source_checked === "notes_only");
+        attachTip(m, [c.group, `Cutoff ${c.cutoff_min === c.cutoff_max ? c.cutoff_min : c.cutoff_min + " to " + c.cutoff_max}`, c.source, `Source: ${c.source_checked.replace(/_/g, " ")}`, c.notes].filter(Boolean));
+        f.svg.append(m);
+      });
+    }
+  });
+  const missing = filtered().filter(s => !s.cutoff_used);
+  if (missing.length) box.append(h("p", { class: "note" }, `Not plotted (no cutoff stated or extracted yet): ${missing.map(studyName).join("; ")}.`));
+}
+
+/* ---------- Panel B: prevalence ---------- */
+function drawPrevalence() {
+  const mode = document.querySelector('input[name="prev"]:checked').value;
+  const items = filtered().map(s => ({
+    s, p8: num(s.prev_at_8_pct), pown: s.cutoff_used == 8 ? num(s.prev_at_8_pct) : num(s.prev_at_cutoff_pct), pun: num(s.prev_unspecified_pct),
+  })).filter(i => i.p8 != null || i.pown != null || i.pun != null).sort((a, b) => (a.s.year || 9999) - (b.s.year || 9999));
+  const box = document.getElementById("chart-b");
+  if (!items.length) { box.replaceChildren(h("p", { class: "empty" }, "No prevalence figures match these filters.")); return; }
+  const f = frame(box, items.length, 100, "Prevalence of hirsutism (%)", [0, 20, 40, 60, 80, 100]);
+  items.forEach((it, i) => {
+    const y = f.y(i), s = it.s;
+    rowLabel(f.svg, y, studyName(s), studySub(s), false);
+    const pts = [];
+    const showOwn = (mode === "both" || mode === "own") && it.pown != null && s.cutoff_used != 8;
+    const show8 = (mode === "both" || mode === "8") && it.p8 != null;
+    if (showOwn && show8) f.svg.append(el("line", { x1: f.x(it.p8), x2: f.x(it.pown), y1: y, y2: y, stroke: "var(--neutral)", "stroke-width": 2 }));
+    if (show8) pts.push([it.p8, "var(--series-1)", `mFG ≥ 8: ${it.p8}%${s.n_hirsute_at_8 ? ` (${s.n_hirsute_at_8}/${s.n_total})` : ""}`]);
+    if (showOwn) pts.push([it.pown, "var(--series-2)", `Own cutoff ≥ ${s.cutoff_used}: ${it.pown}%${s.n_hirsute_at_cutoff ? ` (${s.n_hirsute_at_cutoff}/${s.n_total})` : ""}`]);
+    if (it.pun != null && mode !== "own" || (it.pun != null && it.pown == null)) pts.push([it.pun, "var(--neutral)", `Headline prevalence ${it.pun}%, threshold not stated in the abstract`]);
+    pts.forEach(([v, color, line]) => {
+      const m = marker(pts.length && color === "var(--neutral)" ? "diamond" : "circle", f.x(v), y, 6, color, hollow(s));
+      attachTip(m, [studyName(s), line, ...studyLines(s).slice(1, 2)]);
+      f.svg.append(m);
+    });
+    if (!pts.length) f.svg.append(el("text", { x: f.x(2), y: y + 4, style: "font-size:11px;fill:var(--text-muted)" }, "no figure at this threshold"));
+  });
+}
+
+/* ---------- legends ---------- */
+function legendItem(parent, shapeSvg, label) {
+  const span = h("span"); span.innerHTML = shapeSvg; span.append(document.createTextNode(label)); parent.append(span);
+}
+function drawLegends() {
+  const A = document.getElementById("legend-a"); A.replaceChildren();
+  const svgs = {
+    circle: '<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5"/></svg>',
+    square: '<svg viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="10"/></svg>',
+    triangle: '<svg viewBox="0 0 14 14"><path d="M7 1 L13 12 L1 12Z"/></svg>',
+    diamond: '<svg viewBox="0 0 14 14"><path d="M7 0 L14 7 L7 14 L0 7Z"/></svg>',
+    cross: '<svg viewBox="0 0 14 14"><path d="M5 1h4v4h4v4h-4v4h-4v-4h-4v-4h4z"/></svg>',
+    ring: '<svg viewBox="0 0 14 14"><circle class="ringlg" cx="7" cy="7" r="4.5"/></svg>',
+  };
+  Object.keys(SHAPES).forEach(k => legendItem(A, svgs[SHAPES[k]], LABELS[k]));
+  legendItem(A, '<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5"/></svg>', "Filled: read in the paper");
+  legendItem(A, svgs.ring, "Hollow: second-hand or notes only");
+  const B = document.getElementById("legend-b"); B.replaceChildren();
+  const dot = c => `<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" style="fill:${c}"/></svg>`;
+  legendItem(B, dot("var(--series-1)"), "At mFG ≥ 8");
+  legendItem(B, dot("var(--series-2)"), "At the study's own cutoff");
+  legendItem(B, dot("var(--neutral)"), "Threshold not stated");
+}
+
+/* ---------- tables ---------- */
+function drawTable() {
+  const box = document.getElementById("table");
+  const rows = STUDIES;
+  const t = h("table");
+  t.innerHTML = `<thead><tr><th>Study</th><th>Setting</th><th>Assessor</th><th class="num">n</th><th class="num">Cutoff</th><th class="num">Mean mFG</th><th class="num">Prev. ≥8</th><th class="num">Prev. own cutoff</th><th>Status</th></tr></thead>`;
+  const tb = h("tbody");
+  rows.forEach(s => {
+    const tr = h("tr");
+    const c1 = h("td"); c1.append(h("div", {}, studyName(s)));
+    if (s.title) c1.append(h("div", { style: "font-size:12px;color:var(--text-muted)" }, short(s.title, 80)));
+    const det = h("details"); det.append(h("summary", {}, "notes"));
+    [["Cutoff", s.cutoff_notes], ["Recruitment", s.recruitment_notes], ["Assessor", s.assessor_notes], ["Quality", s.quality_notes], ["Other", s.notes], ["Source", s.data_source]]
+      .filter(x => x[1]).forEach(([k, v]) => det.append(h("p", { style: "margin:4px 0;font-size:12px;color:var(--text-secondary)" }, `${k}: ${v}`)));
+    c1.append(det); tr.append(c1);
+    const cell = (v, cls) => h("td", cls ? { class: cls } : {}, v == null || v === "" ? "–" : String(v));
+    tr.append(cell(LABELS[s.setting]), cell(ASSESSORS[s.assessor]), cell(s.n_total, "num"), cell(s.cutoff_used, "num"), cell(s.mean_mfg, "num"),
+      cell(s.prev_at_8_pct ? s.prev_at_8_pct + "%" : (s.prev_unspecified_pct ? s.prev_unspecified_pct + "%*" : ""), "num"),
+      cell(s.prev_at_cutoff_pct ? s.prev_at_cutoff_pct + "%" : "", "num"));
+    const st = h("td"); st.append(h("span", { class: "tag" }, `${s.inclusion_status}, ${s.source_checked.replace(/_/g, " ")}`)); tr.append(st);
+    tb.append(tr);
+  });
+  t.append(tb);
+  box.replaceChildren(t, h("p", { class: "note" }, "* headline prevalence; the abstract does not state the mFG threshold. A dash means not reported or not yet extracted."));
+  const cb = document.getElementById("claims");
+  const ct = h("table");
+  ct.innerHTML = `<thead><tr><th>Claim</th><th>Direction</th><th>Stated in</th><th>Cites</th><th>Checked</th></tr></thead>`;
+  const ctb = h("tbody");
+  CLAIMS.forEach(c => {
+    const tr = h("tr");
+    const first = h("td", {}, c.claim); if (c.notes) first.append(h("div", { style: "font-size:12px;color:var(--text-muted)" }, c.notes));
+    tr.append(first, h("td", {}, c.direction), h("td", {}, c.stated_in), h("td", {}, c.cited_to || "–"), h("td", {}, c.checked));
+    ctb.append(tr);
+  });
+  ct.append(ctb); cb.replaceChildren(ct);
+}
+
+/* ---------- boot ---------- */
+function fillSelect(id, values, labels, allLabel) {
+  const sel = document.getElementById(id);
+  sel.replaceChildren(h("option", { value: "" }, allLabel));
+  [...new Set(values.filter(Boolean))].sort().forEach(v => sel.append(h("option", { value: v }, (labels && labels[v]) || v)));
+}
+function redraw() { drawCutoffs(); drawPrevalence(); }
+async function boot() {
+  const get = async n => parseCSV(await (await fetch("data/" + n)).text());
+  [STUDIES, COMPS, CLAIMS] = await Promise.all([get("studies.csv"), get("comparators.csv"), get("claims.csv")]);
+  COMPS.forEach(c => { c.cutoff_min = +c.cutoff_min; c.cutoff_max = +c.cutoff_max; });
+    fillSelect("f-setting", STUDIES.map(s => s.setting), LABELS, "All settings");
+  fillSelect("f-assessor", STUDIES.map(s => s.assessor), ASSESSORS, "All assessors");
+  fillSelect("f-country", STUDIES.map(s => s.country), null, "All countries");
+  drawLegends(); drawTable(); redraw();
+  document.querySelectorAll(".filters select, .filters input").forEach(e => e.addEventListener("change", redraw));
+}
+boot().catch(err => {
+  document.getElementById("chart-a").replaceChildren(h("p", { class: "empty" }, "Could not load data/*.csv (" + err.message + "). Serve this folder over HTTP, e.g. python -m http.server -d docs."));
+});
+</script>
+</body>
+</html>
